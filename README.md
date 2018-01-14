@@ -7,4 +7,6 @@ go build
 ```
 
 ## Usage:
+```
 ./crawler --domain https://xkcd.com --output-file output.tsv --timeout 1m --level INFO 
+```
