@@ -48,28 +48,23 @@ func (args *Crawler) Crawl() {
 
     ticker := time.NewTicker(time.Second * 5)
     go func() {
-        for t := range ticker.C {
-            logger.Info(t.String() + " channel length: " + 
+        for {
+            select {
+                case t := <- ticker.C:
+                    logger.Info(t.String() + " channel length: " +
                         fmt.Sprintf("%d", len(links)), ", channel capacity: " +
                         fmt.Sprintf("%d", cap(links)))
+                case link := <- links:
+                    logger.Debug("got link: "+link)
+                    wg.Add(1)
+                    go processLink(link, lines, links, &wg)
+                case line := <- lines:
+                    w.WriteString(line)
+                 
+            }
         }
     }()
-        
-    go func() {
-        for link := range links {
-            logger.Debug("got link: "+link)
-            wg.Add(1)
-            go processLink(link, lines, links, &wg)
-        }
-    }()
-
-    go func() {
-        for line := range lines {
-            wg.Add(1)
-            w.WriteString(line)
-            wg.Done()
-        }
-    }()  
+  
 
     logger.Info("started processing...") 
  
