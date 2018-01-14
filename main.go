@@ -3,16 +3,21 @@ package main
 import (
 	"crawler/sub"
 	"flag"
-	"fmt"
-	"os"
+        "time"
 )
 
 func main() {
+        level := flag.String("level", "INFO", "logging level. Valid logging levels: {DEBUG, INFO, WARN, ERROR, CRITICAL}")
+        domain := flag.String("domain", "https://xkcd.com", "domain to crawl")
+        outputFile := flag.String("output-file", "output.tsv", "output file path")
+        timeout := flag.String("timeout", "1m", "duration to wait for completion. Valid time units: {ns, us (or µs), ms, s, m, h}.") 
 	flag.Parse()
-	args := flag.Args()
-	if len(args) != 2 {
-		fmt.Println("usage: ./crawler start-page output-file")
-		os.Exit(1)
-	}
-	crawler.Run(args[0], args[1])
+	
+        d, err := time.ParseDuration(*timeout)
+
+        if err != nil {
+            panic(err)
+        }
+        crawl := &crawler.Crawler{*domain, *outputFile, d, *level}
+        crawl.Crawl()
 }
