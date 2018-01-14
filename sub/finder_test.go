@@ -1,6 +1,8 @@
 package crawler
 
 import (
+        "github.com/deckarep/golang-set"
+        "fmt"
 	"strings"
 	"testing"
 )
@@ -19,14 +21,12 @@ func TestFind(t *testing.T) {
 	if len(resources) != 2 {
 		t.Error("Wrong number of resources.")
 	}
-
-	if resources[0] != "/js/cookiechoices.js" {
-		t.Error("The first resources should be js")
-	}
-
-	if resources[1] != "cat.png" {
-		t.Error("The second resource should be cat.png")
-	}
+        
+        for _, r := range resources {
+            if r != "/js/cookiechoices.js" && r != "cat.png" {
+                t.Error("unexpected resource: "+r)
+            }
+        }
 
 	if len(links) != 2 {
 		t.Error("Wrong number of links.")
@@ -43,4 +43,20 @@ func TestClean(t *testing.T) {
 	if clean(link1) != clean(link3) {
 		t.Error("Already clean link damaged")
 	}
+}
+
+func TestToSlice(t *testing.T) {
+        set := mapset.NewSet()
+        set.Add("first")
+        set.Add("second")
+        slice := toSlice(set)
+        if len(slice) != 2 {
+            t.Error("Slice length is not 2")
+        }
+        fmt.Println(slice)
+        for _, s := range slice {
+            if s != "first" && s != "second" {
+                t.Error("unexpected value in slice: "+s)
+            }
+        }
 }
