@@ -1,0 +1,7 @@
+Installation:
+go get golang.org/x/net/htm 
+go get github.com/bobesa/go-domain-util/domainutil
+go build
+
+Usage:
+./crawler start-page output-file
