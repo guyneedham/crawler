@@ -1,5 +1,5 @@
 ## Installation:
-go get golang.org/x/net/htm 
+go get golang.org/x/net/htm
 go get github.com/bobesa/go-domain-util/domainutil
 go get github.com/ccding/go-logging/logging
 go build
